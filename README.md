@@ -25,7 +25,7 @@ A proof-of-concept dApp will be developed to expore and test this idea.
 * Define proposal ERC specification including contract interface definitions
 * Build and deploy ERC20 complient contracts to Ropsten test network
 * Build and deploy proof-of-concept, web-based dApp that integrates with Solidity contracts
-* Users will mine FIT tokens
+* Users will mine FIT tokens and post scores to leaderboards
 * Identify future concepts/ideas to expore further
 
 ### Out of Scope
