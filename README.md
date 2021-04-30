@@ -32,6 +32,31 @@ A proof-of-concept dApp will be developed to expore and test this idea.
 * The focus of this project is not token economics
 * Production ready web UI and UX concerns
 
+
+<br>
+
+- - -
+
+<br>
+
+## Future Vision
+
+<br>
+
+* Various competitive architectures and token models
+    * BlockFitter @Home
+        * Validate work using machine learning on IOT edge enabled device
+    * BlockFitter Affiliate Gym
+        * Validate work using certified affiliate judges
+    * BlockFitter Games
+* Purchase NFTs with FIT tokens
+* Earn NFTs for personal records or top leaderboard scores
+* Tokenomics:
+    * Percentage of earned FIT tokens distributed to affiliate gym and/or Blockfitter association
+    * Build in FIT token deflationary mechanism
+* NFT auction platform
+* FIT tokens traded on exchange?
+
 <br>
 
 - - -
