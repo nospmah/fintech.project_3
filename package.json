@@ -1,0 +1,24 @@
+{
+  "name": "fintech.project_3",
+  "version": "1.0.0",
+  "description": "* Brian Hampson",
+  "main": "dapp.js",
+  "scripts": {
+    "start":"node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nospmah/fintech.project_3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nospmah/fintech.project_3/issues"
+  },
+  "homepage": "https://github.com/nospmah/fintech.project_3#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
