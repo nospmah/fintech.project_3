@@ -45,7 +45,7 @@ A proof-of-concept dApp will be developed to expore and test this idea.
 
 * Various competitive architectures and token models
     * BlockFitter @Home
-        * Validate work using machine learning on IOT edge enabled device
+        * Validate work using machine learning on IOT edge enabled proprietary device
     * BlockFitter Affiliate Gym
         * Validate work using certified affiliate judges
     * BlockFitter Games
@@ -67,8 +67,22 @@ A proof-of-concept dApp will be developed to expore and test this idea.
 
 <br>
 
-* Existing ERC standards may be applicable
+* Ethereum Improvement Proposal Registry
+    * https://eips.ethereum.org/
 * Data storage on IPFS
+
+<br>
+
+- - -
+
+<br>
+
+## Files
+
+<br>
+
+* [todo](todo.sol)
+
 
 <br>
 
@@ -78,13 +92,20 @@ A proof-of-concept dApp will be developed to expore and test this idea.
 
 ## Task Breakdown
 
+<br>
+
 * x - Brainstorm use-case scenarios 
 * Data brainstorming
     * Identify entities
     * Identify relationships
+    * Define contract interfaces
+* Review class defi course material
+    * Identify relevant ERC standards
+    * Investigate new standards
+* Class diagram
 * Define use case scenarios
 * Sequence diagrams
-* Define contract interfaces
+* Draft ERC standards
 * Build Solidity contracts
 * Build web-based dApp and inategrate with Solidity contracts
 * x - Git repo
