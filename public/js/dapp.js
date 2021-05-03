@@ -1,5 +1,5 @@
 
-const contractAddress = "0xFE11B691C29E34C8274558B7A376F79553191f44";
+const contractAddress = "0xEc5691d7C597C3b5657a2f9081C53E541514ee3e";
 
 const dApp = {
   ethEnabled: function() {
@@ -12,39 +12,62 @@ const dApp = {
       window.ethereum.enable();
       return true;
     }
+
     return false;
   },
-  collectVars: async function() {
-    // get land tokens
-    // this.tokens = [];
-    // this.totalSupply = await this.marsContract.methods.totalSupply().call();
 
-    // // fetch json metadata from IPFS (name, description, image, etc)
-    // const fetchMetadata = (reference_uri) => fetch(`https://gateway.pinata.cloud/ipfs/${reference_uri.replace("ipfs://", "")}`, { mode: "cors" }).then((resp) => resp.json());
+  initData: async function() {
 
-    // for (let i = 1; i <= this.totalSupply; i++) {
-    //   try {
-    //     const token_uri = await this.marsContract.methods.tokenURI(i).call();
-    //     console.log('token uri', token_uri)
-    //     const token_json = await fetchMetadata(token_uri);
-    //     console.log('token json', token_json)
-    //     this.tokens.push({
-    //       tokenId: i,
-    //       highestBid: Number(await this.marsContract.methods.highestBid(i).call()),
-    //       auctionEnded: Boolean(await this.marsContract.methods.auctionEnded(i).call()),
-    //       pendingReturn: Number(await this.marsContract.methods.pendingReturn(i, this.accounts[0]).call()),
-    //       auction: new window.web3.eth.Contract(
-    //         this.auctionJson,
-    //         await this.marsContract.methods.auctions(i).call(),
-    //         { defaultAccount: this.accounts[0] }
-    //       ),
-    //       owner: await this.marsContract.methods.ownerOf(i).call(),
-    //       ...token_json
-    //     });
-    //   } catch (e) {
-    //     console.log(JSON.stringify(e));
-    //   }
-    // }
+    const fetchMetadata = (reference_uri) => fetch(`https://gateway.pinata.cloud/ipfs/${reference_uri.replace("ipfs://", "")}`, { mode: "cors" }).then((resp) => resp.json());
+    
+    this.affiliateGymCount = await this.blockFitterContract.methods.getAffiliateGymCount().call();
+    this.affiliateGyms = [];
+
+    console.log(`DEBUG: dapp.initData - gym count: ${this.affiliateGymCount}`);
+
+    for (let i = 1; i <= this.affiliateGymCount; i++) {
+      try {
+        const affiliate_gym_uri = await this.blockFitterContract.methods.getAffiliateUri(i).call();
+        console.log(`DEBUG: dapp.initData - gymId: ${i}, uri: ${affiliate_gym_uri}`);
+        //console.log(`DEBUG: dapp.initData - gymId: ${i} ', affiliate_gym_uri)
+        //const affiliate_gym_json = await fetchMetadata(affiliate_gym_uri);
+        //console.log('affiliate_gym_json: ', token_json)
+
+        this.affiliateGyms.push({
+          affiliateGymId: i,
+          uri: affiliate_gym_uri,
+          json: "json here"
+        });
+
+      } catch (e) {
+        console.log(`DEBUG: dapp.initData - error: ${JSON.stringify(e)}`);
+      }
+    }
+  },
+
+  render: async function() {    
+    
+    // refresh variables
+    await this.initData();
+
+    let acctAddress = $("#owner").text(`Account address: ${JSON.stringify(this.accounts[0])}`);
+    
+    console.log(`DEBUG: dapp.render - Account address: ${acctAddress}`);
+
+    // Clear affiliate gyms
+    $("#affiliate-gym-container").html("");
+
+    this.affiliateGyms.forEach((gym) => {
+      $("#affiliate-gym-container").append(
+        `
+        <div style="width:800px; height: 100px; background-color: darkgray; display: inline-block; margin: 10px;">
+          <h3>${gym.affiliateGymId}</h3>
+          <h3>${gym.uri}</h3>
+          <h3>${gym.json}</h3>
+        </div>        
+        `);
+    });
+
   },
   setAdmin: async function() {
     // if account selected in MetaMask is the same as owner then admin will show
@@ -54,8 +77,62 @@ const dApp = {
     //   $(".dapp-admin").hide();
     // }
   },
-  updateUI: async function() {
-    console.log("updateUI");
+  main: async function() {
+
+    // Initialize web3
+    if (!this.ethEnabled()) {
+      alert("Please install MetaMask to use this dApp!");
+    }
+
+    try {
+
+      this.accounts = await window.web3.eth.getAccounts();
+      this.contractAddress = contractAddress; 
+
+      this.blockFitterRegistryJson = await (await fetch("../assets/BlockFitterRegistry.json")).json();
+
+      this.blockFitterContract = new window.web3.eth.Contract(
+        this.blockFitterRegistryJson,
+        this.contractAddress,
+        { defaultAccount: this.accounts[0] }
+      );
+
+      console.log(`DEBUG: dapp.main - contract: ${this.blockFitterContract}`);
+
+      await this.render();
+
+    } catch (e) {
+      console.log(JSON.stringify(e));
+    }
+  }
+};
+
+dApp.main();
+
+    // this.marsJson = await (await fetch("./MartianMarket.json")).json();
+    // this.auctionJson = await (await fetch("./MartianAuction.json")).json();
+
+    // this.marsContract = new window.web3.eth.Contract(
+    //   this.marsJson,
+    //   this.contractAddress,
+    //   { defaultAccount: this.accounts[0] }
+    // );
+    // console.log("Contract object", this.marsContract);
+
+    // this.isAdmin = this.accounts[0] == await this.marsContract.methods.owner().call();
+
+    // await this.updateUI();
+
+      // this.owner == await this.blockFitterContract.methods.owner().call();
+      // console.log(`DEBUG: dapp.main - 4 - ${JSON.stringify(this.accounts[0])}`);
+      // console.log("Contract object", JSON.stringify(this.blockFitterContract));
+      // console.log(`DEBUG: dapp.main - blockFitter contract: ${JSON.stringify(this.blockFitterContract)}`);
+
+
+
+
+  // updateUI: async function() {
+  //   console.log("updateUI");
     // // refresh variables
     // await this.collectVars();
 
@@ -91,7 +168,7 @@ const dApp = {
 
     // // hide or show admin functions based on contract ownership
     // this.setAdmin();
-  },
+  //},
   // bid: async function(event) {
   //   const tokenId = $(event.target).attr("token-id");
   //   const wei = Number($(event.target).prev().val());
@@ -181,54 +258,6 @@ const dApp = {
   //     alert("ERROR:", JSON.stringify(e));
   //   }
   // },
-  main: async function() {
-    
-    console.log(`DEBUG: dapp.main`);
-
-    // Initialize web3
-    if (!this.ethEnabled()) {
-      alert("Please install MetaMask to use this dApp!");
-    }
-
-    try {
-
-      this.accounts = await window.web3.eth.getAccounts();
-      this.contractAddress = contractAddress;
-  
-      this.blockFitterRegistryJson = await (await fetch("./BlockFitterRegistry.json")).json();
-
-
-      this.blockFitterContract = new window.web3.eth.Contract(
-        this.blockFitterRegistryJson,
-        this.contractAddress,
-        { defaultAccount: this.accounts[0] }
-      );
-
-      console.log("Contract object", this.blockFitterContract);
-
-    } catch (e) {
-      console.log(JSON.stringify(e));
-    }
-
-    // this.marsJson = await (await fetch("./MartianMarket.json")).json();
-    // this.auctionJson = await (await fetch("./MartianAuction.json")).json();
-
-    // this.marsContract = new window.web3.eth.Contract(
-    //   this.marsJson,
-    //   this.contractAddress,
-    //   { defaultAccount: this.accounts[0] }
-    // );
-    // console.log("Contract object", this.marsContract);
-
-    // this.isAdmin = this.accounts[0] == await this.marsContract.methods.owner().call();
-
-    // await this.updateUI();
-  }
-};
-
-dApp.main();
-
-
 
 //   try {
 
