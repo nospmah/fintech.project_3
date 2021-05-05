@@ -1,3 +1,7 @@
+// var qrCode = require('qrcode');
+// requirejs(["qrcode"], function (qrcode) {
+//   console.log(`qrcode loaded!`);
+// });
 
 const contractAddress = "0xEc5691d7C597C3b5657a2f9081C53E541514ee3e";
 
@@ -60,11 +64,14 @@ const dApp = {
     this.affiliateGyms.forEach((gym) => {
       $("#affiliate-gym-container").append(
         `
-        <div style="width:800px; height: 100px; background-color: darkgray; display: inline-block; margin: 10px;">
-          <h3>${gym.affiliateGymId}</h3>
-          <h3>${gym.uri}</h3>
-          <h3>${gym.json}</h3>
-        </div>        
+        <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">${gym.affiliateGymId}</h5>
+            <p class="card-text">${gym.json}</p>
+            <a href="#" class="btn btn-primary">${gym.uri}</a>
+          </div>
+        </div>
         `);
     });
 

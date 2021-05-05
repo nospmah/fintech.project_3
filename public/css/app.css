@@ -1,0 +1,42 @@
+body {
+  overflow: hidden;
+  color: white;
+  margin:0px;
+  padding:0px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#app-container {
+  width:100vw;
+  height:100vh;
+  margin:0px;
+  padding:0px;
+  background-color:white;
+}
+
+#header {
+  height: 152px;
+  background-image: url("../images/header-bg.png");
+  background-position: left top;
+  background-repeat: no-repeat;
+  background-size:auto;
+  background-color: #0F0027;
+}
+
+#navigation {
+  height: auto;
+}
+
+#affiliate-gym-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  width:100%;
+}
+
+.card {
+  margin-right:20px;
+  margin-bottom:20px;
+  color:black;
+}
