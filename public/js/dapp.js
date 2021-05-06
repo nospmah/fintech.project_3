@@ -1,15 +1,11 @@
-// var qrCode = require('qrcode');
-// requirejs(["qrcode"], function (qrcode) {
-//   console.log(`qrcode loaded!`);
-// });
-
 const contractAddress = "0xEc5691d7C597C3b5657a2f9081C53E541514ee3e";
+const qrcode = new QRCode("qrcode");
 
 const dApp = {
   ethEnabled: function() {
     // If the browser has an Ethereum provider (MetaMask) installed
 
-    console.log(`DEBUG: window.ethereum: ${window.ethereum}`);
+    console.log(`DEBUG: window.ethereum: ${window.ethereum}, qrcode: ${QRCode}`);
 
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
@@ -54,7 +50,7 @@ const dApp = {
     // refresh variables
     await this.initData();
 
-    let acctAddress = $("#owner").text(`Account address: ${JSON.stringify(this.accounts[0])}`);
+    let acctAddress = $("#owner").text(`${JSON.stringify(this.accounts[0]).replace(/["']/g, "")}`);
     
     console.log(`DEBUG: dapp.render - Account address: ${acctAddress}`);
 
@@ -65,17 +61,94 @@ const dApp = {
       $("#affiliate-gym-container").append(
         `
         <div class="card" style="width: 18rem;">
-          <img src="..." class="card-img-top" alt="...">
+          <img src="../images/box_2.png" class="card-img-top" alt="...">
           <div class="card-body">
             <h5 class="card-title">${gym.affiliateGymId}</h5>
-            <p class="card-text">${gym.json}</p>
-            <a href="#" class="btn btn-primary">${gym.uri}</a>
+            <p class="card-text">${gym.uri}</p>
+            <a href="#" class="btn btn-primary">Deactivate</a>
           </div>
         </div>
         `);
     });
 
   },
+
+  registerAffiliateGym: async function() {
+
+    console.log(`DEBUG: registerAffiliateGym`);
+
+    try {
+      const name = $("#register-affiliate-name").val();
+      const address = $("#register-affiliate-address").val();
+      const uri = $("#register-affiliate-uri").val();
+      // const pinata_api_key = $("#register-affiliate-pinata-api-key").val();
+      // const pinata_secret = $("#register-affiliate-pinata-api-secret").val();
+      const pinata_api_key = "a190d395a2bde42df710";
+      const pinata_secret_api_key = "3a910879529b43f3b1cfd0162920c7ed0aa5693f9887995d8d81e815c8a93413";
+
+      // if (!name || !address || !uri) {
+      //   alert('Missing data!');
+      //   return;
+      // }
+
+      // if (!name || !address || !uri || !pinata_api_key || !pinata_secret) {
+      //   alert('Missing data!');
+      //   return;
+      // }
+
+      const reference_json = JSON.stringify({
+        "pinataMetadata": { name: name },
+        "pinataContent": { "test": "testing" },
+        "pinataOptions": { cidVersion: 1}
+      });
+
+      const json_upload_response = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+          pinata_api_key,
+          pinata_secret_api_key
+        },
+        body: reference_json
+      });
+
+      // const reference_hash = await json_upload_response.json();
+      // const reference_uri = `ipfs://${reference_hash.IpfsHash}`;
+
+      // await this.blockFitterContract.methods.registerAffiliateGym(name, address, uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+        
+      //   $("#register-affiliate-name").val("");
+      //   $("#register-affiliate-address").val("");
+      //   $("#register-affiliate-pinata-api-key").val("");
+      //   $("#register-affiliate-pinata-api-secret").val("");
+
+      //   await this.render();
+      // });
+
+    } catch (e) {
+      console.log(`DEBUG: dapp.registerAffiliateGym - error: ${JSON.stringify(e)}`);
+    }
+  },
+
+  generateQrCode: async function() {
+
+    const currentAddress = JSON.stringify(this.accounts[0]);
+    console.log(`DEBUG: dapp.generateQrCode - Account address: ${currentAddress}`);
+    qrcode.makeCode(currentAddress);
+    
+
+    // const name = $("#qrcode").val();
+    // var qrcode = new QRCode("test", {
+    //   text: "http://jindo.dev.naver.com/collie",
+    //   width: 128,
+    //   height: 128,
+    //   colorDark : "#000000",
+    //   colorLight : "#ffffff",
+    //   correctLevel : QRCode.CorrectLevel.H
+    // });
+  },
+
   setAdmin: async function() {
     // if account selected in MetaMask is the same as owner then admin will show
     // if (this.isAdmin) {

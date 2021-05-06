@@ -1,14 +1,26 @@
 body {
   overflow: hidden;
-  color: white;
+  color: black;
   margin:0px;
   padding:0px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+h5 {
+  margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #C80077;
+  border: #C80077;
+}
+
+.tab-pane {
+ min-height: 600px;
+}
+
 #app-container {
   width:100vw;
-  height:100vh;
   margin:0px;
   padding:0px;
   background-color:white;
@@ -24,7 +36,21 @@ body {
 }
 
 #navigation {
+  margin:20px;
   height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+#owner {
+  margin-right: 20px;
+  font-size: 14px;
+}
+
+#affiliate-input {
+  margin: 20px;
 }
 
 #affiliate-gym-container {
@@ -33,10 +59,29 @@ body {
   flex-wrap: wrap;
   justify-content: flex-start;
   width:100%;
+  margin: 20px;
 }
 
 .card {
   margin-right:20px;
   margin-bottom:20px;
   color:black;
+}
+
+.registered-gym-header {
+  margin: 20px;
+  margin-top: 30px;
+}
+
+.content-container {
+  margin:20px;
+}
+
+#qrcode {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #C80077;
 }

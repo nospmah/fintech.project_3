@@ -11,8 +11,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
   <!-- Compiled and minified Materialize CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" integrity="sha256-OweaP/Ic6rsV+lysfyS4h+LM6sRwuO3euTYfr6M124g=" crossorigin="anonymous" />
-  
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" integrity="sha256-OweaP/Ic6rsV+lysfyS4h+LM6sRwuO3euTYfr6M124g=" crossorigin="anonymous" />
+   -->
   <!-- FontAwesome icons -->
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
@@ -32,37 +32,68 @@
     <div id="header">
       <!-- <h1>BlockFitter test</h1>
       <span id="owner"></span> -->
-
-      <!-- TODO - add about page -->
     </div>
     <div id="navigation">
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <ul class="nav nav-pills" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="home" aria-selected="true">Member</button>
+          <button class="nav-link active" id="affiliate-tab" data-bs-toggle="tab" data-bs-target="#affiliate" type="button" role="tab" aria-controls="profile" aria-selected="false">Affiliate Gym</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="affiliate-tab" data-bs-toggle="tab" data-bs-target="#affiliate" type="button" role="tab" aria-controls="profile" aria-selected="false">Affiliate Gym</button>
+          <button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="home" aria-selected="true">Member</button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="contact" aria-selected="false">Admin</button>
         </li>
       </ul>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="member" role="tabpanel" aria-labelledby="member-tab">
-          <button>mine daily WOD</button>
-        </div>
-        <div class="tab-pane fade" id="affiliate" role="tabpanel" aria-labelledby="affiliate-tab">
-          <div id="affiliate-gym-container">
-          </div>
-        </div>
-        <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-          hello, admin
+      <span id="owner"></span>
+    </div>
+    <!-- add about page -->
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade " id="member" role="tabpanel" aria-labelledby="member-tab">
+        <div class="content-container">
+          <button class="btn btn-primary" onclick="dApp.generateQrCode()">My address</button>
+          <div id="qrcode"></div>
+          <button class="btn btn-primary" onclick="dApp.generateQrCode()">Mine daily WOD</button>
         </div>
       </div>
-    </div>
+      <div class="tab-pane fade show active" id="affiliate" role="tabpanel" aria-labelledby="affiliate-tab">
+        <div id="affiliate-input">
+          <h5>Register new affiliate gym</h5>
+          <div class="mb-3">              
+            <input type="text" class="form-control" id="register-affiliate-name" aria-describedby="emailHelp" placeholder="Affiliate gym name">
+          </div>
+          <div class="mb-3">              
+            <input type="text" class="form-control" id="register-affiliate-address" placeholder="Payable address">
+          </div>
+          <div class="mb-3">              
+            <input type="text" class="form-control" id="register-affiliate-uri" placeholder="IPFS uri">
+          </div>
+          <!-- <div class="mb-3">              
+            <input type="text" class="form-control" id="register-affiliate-pinata-api-key" placeholder="Pinata API key">
+          </div>
+          <div class="mb-3">              
+            <input type="password" class="form-control" id="register-affiliate-pinata-api-secret" placeholder="Pinata secret">
+          </div> -->
+          <button type="submit" class="btn btn-primary" onclick="dApp.registerAffiliateGym()">Register</button>
+        </div>       
+        <h5 class="registered-gym-header">Registered affiliate gyms</h5>
+        <div id="affiliate-gym-container"></div>
+      </div>
+      <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+        hello, admin
+      </div>
+    </div>    
   </div>
 
 
+            <!-- <label for="exampleInputEmail1" class="form-label">Email address</label> -->
+          <!-- <label for="exampleInputPassword1" class="form-label">Password</label> -->
+          <!-- <label for="exampleInputPassword1" class="form-label">Password</label> -->
+          <!-- <div>
+            <p><input id="affiliate-gym-name" placeholder="name"/></p>
+            <p><input id="affiliate-gym-address" placeholder="payable address"/></p>
+            <p><input id="affiliate-gym-uri" placeholder="IPFS uri"/></p>
+          </div> -->   
   
   <!-- <div id="affiliate-gym-container" style="display: flexbox;">
 
@@ -119,8 +150,8 @@
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
   
   <!-- Compiled and minified JavaScript for Materialize CSS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" integrity="sha256-U/cHDMTIHCeMcvehBv1xQ052bPSbJtbuiw4QA9cTKz0=" crossorigin="anonymous"></script>
-  
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" integrity="sha256-U/cHDMTIHCeMcvehBv1xQ052bPSbJtbuiw4QA9cTKz0=" crossorigin="anonymous"></script>
+   -->
   <!-- Web3.js -->
   <script src="https://cdn.jsdelivr.net/npm/web3@1.2.5-rc.0/dist/web3.min.js" integrity="sha256-ZjUHyLZZWkQPbWfRjTSmGtfcTSOermVT6f/CvJW2RY4=" crossorigin="anonymous"></script>
   
@@ -130,8 +161,15 @@
   <!-- Bootsrap -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
-  <!-- dApp JavaScript -->
-  <script src="./js/dapp.js"></script>
+    <!-- QRCode JavaScript -->
+    <script src="./js/qrcode.js"></script>
+
+    <!-- dApp JavaScript -->
+    <script src="./js/dapp.js"></script>
+
+
+
+
 
   
 
