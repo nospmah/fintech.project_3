@@ -59,21 +59,30 @@
       <div class="tab-pane fade show active" id="affiliate" role="tabpanel" aria-labelledby="affiliate-tab">
         <div id="affiliate-input">
           <h5>Register new affiliate gym</h5>
+          <!-- 
+            onchain: id, payable address, uri, admin address (todo),
+            offchain: name, description, img (todo)
+
+            input fields: name, desc, payable address, judge address, 
+           -->
           <div class="mb-3">              
-            <input type="text" class="form-control" id="register-affiliate-name" aria-describedby="emailHelp" placeholder="Affiliate gym name">
+            <input type="text" class="form-control" id="reg-aff-name" aria-describedby="emailHelp" placeholder="Affiliate gym name">
           </div>
           <div class="mb-3">              
-            <input type="text" class="form-control" id="register-affiliate-address" placeholder="Payable address">
+            <input type="text" class="form-control" id="reg-aff-description" placeholder="Description (optional)">
           </div>
           <div class="mb-3">              
-            <input type="text" class="form-control" id="register-affiliate-uri" placeholder="IPFS uri">
-          </div>
-          <!-- <div class="mb-3">              
-            <input type="text" class="form-control" id="register-affiliate-pinata-api-key" placeholder="Pinata API key">
+            <input type="text" class="form-control" id="reg-aff-payable-address" placeholder="Payable address">
           </div>
           <div class="mb-3">              
-            <input type="password" class="form-control" id="register-affiliate-pinata-api-secret" placeholder="Pinata secret">
-          </div> -->
+            <input type="text" class="form-control" id="reg-aff-judge-address" placeholder="Affiliate judge address (optional)">
+          </div>
+          <div class="mb-3">              
+            <input type="text" class="form-control" id="reg-aff-pinata-api-key" placeholder="Pinata API key">
+          </div>
+          <div class="mb-3">              
+            <input type="password" class="form-control" id="reg-aff-pinata-api-secret" placeholder="Pinata secret">
+          </div>
           <button type="submit" class="btn btn-primary" onclick="dApp.registerAffiliateGym()">Register</button>
         </div>       
         <h5 class="registered-gym-header">Registered affiliate gyms</h5>

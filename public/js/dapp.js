@@ -1,7 +1,8 @@
-const contractAddress = "0xEc5691d7C597C3b5657a2f9081C53E541514ee3e";
+const contractAddress = "0x1918b645ECC3aa5aE40a80994063Ef5F5B32e04F";
 const qrcode = new QRCode("qrcode");
 
 const dApp = {
+
   ethEnabled: function() {
     // If the browser has an Ethereum provider (MetaMask) installed
 
@@ -27,16 +28,33 @@ const dApp = {
 
     for (let i = 1; i <= this.affiliateGymCount; i++) {
       try {
+        
+        // Get IPFS uri
         const affiliate_gym_uri = await this.blockFitterContract.methods.getAffiliateUri(i).call();
+        
+        // If gym has been deactivated, uri will be empty
+        if (affiliate_gym_uri === '') continue;
+
+        // let { name, description } = null;
+        let name = "";
+        let description = "";
+
+        if (affiliate_gym_uri.startsWith('ipfs')) {
+          const affiliate_gym_json = await fetchMetadata(affiliate_gym_uri);
+          name = affiliate_gym_json['name'];
+          description = affiliate_gym_json['description'];
+        }         
+
         console.log(`DEBUG: dapp.initData - gymId: ${i}, uri: ${affiliate_gym_uri}`);
         //console.log(`DEBUG: dapp.initData - gymId: ${i} ', affiliate_gym_uri)
         //const affiliate_gym_json = await fetchMetadata(affiliate_gym_uri);
         //console.log('affiliate_gym_json: ', token_json)
 
         this.affiliateGyms.push({
-          affiliateGymId: i,
-          uri: affiliate_gym_uri,
-          json: "json here"
+          id: i,
+          name: name,
+          description: description,
+          uri: affiliate_gym_uri
         });
 
       } catch (e) {
@@ -63,14 +81,14 @@ const dApp = {
         <div class="card" style="width: 18rem;">
           <img src="../images/box_2.png" class="card-img-top" alt="...">
           <div class="card-body">
-            <h5 class="card-title">${gym.affiliateGymId}</h5>
-            <p class="card-text">${gym.uri}</p>
-            <a href="#" class="btn btn-primary">Deactivate</a>
+            <h5 class="card-title">${gym.name} (${gym.id})</h5>
+            <h7 class="card-title">${gym.description}</h7>
+            <a href="${gym.uri}" target="_blank" class="card-text">IPFS link</a>
+            <a href="#" class="btn btn-primary" data-id="${gym.id}" onclick="dApp.deactivateAffiliateGym(${gym.id})">Deactivate</a>            
           </div>
         </div>
         `);
     });
-
   },
 
   registerAffiliateGym: async function() {
@@ -78,27 +96,28 @@ const dApp = {
     console.log(`DEBUG: registerAffiliateGym`);
 
     try {
-      const name = $("#register-affiliate-name").val();
-      const address = $("#register-affiliate-address").val();
-      const uri = $("#register-affiliate-uri").val();
-      // const pinata_api_key = $("#register-affiliate-pinata-api-key").val();
-      // const pinata_secret = $("#register-affiliate-pinata-api-secret").val();
+
+      const name = $("#reg-aff-name").val();
+      const description = $("#reg-aff-description").val();
+      const payable_address = $("#reg-aff-payable-address").val();
+      const judge_address = $("#reg-aff-judge-address").val();
+      // const pinata_api_key = $("#reg-aff-pinata-api-key").val();
+      // const pinata_secret_api_key = $("#reg-aff-pinata-api-secret").val();
       const pinata_api_key = "a190d395a2bde42df710";
       const pinata_secret_api_key = "3a910879529b43f3b1cfd0162920c7ed0aa5693f9887995d8d81e815c8a93413";
 
-      // if (!name || !address || !uri) {
-      //   alert('Missing data!');
-      //   return;
-      // }
-
-      // if (!name || !address || !uri || !pinata_api_key || !pinata_secret) {
-      //   alert('Missing data!');
-      //   return;
-      // }
+      if (!name || !payable_address) {
+        alert('Missing data!');
+        return;
+      }
 
       const reference_json = JSON.stringify({
         "pinataMetadata": { name: name },
-        "pinataContent": { "test": "testing" },
+        "pinataContent": { 
+          name: name,
+          description: description,
+          image: '../images/box_2.png'
+        },
         "pinataOptions": { cidVersion: 1}
       });
 
@@ -113,40 +132,45 @@ const dApp = {
         body: reference_json
       });
 
-      // const reference_hash = await json_upload_response.json();
-      // const reference_uri = `ipfs://${reference_hash.IpfsHash}`;
+      const reference_hash = await json_upload_response.json();
+      const reference_uri = `ipfs://${reference_hash.IpfsHash}`;
 
-      // await this.blockFitterContract.methods.registerAffiliateGym(name, address, uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+      await this.blockFitterContract.methods.registerAffiliateGym(name, payable_address, reference_uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
         
-      //   $("#register-affiliate-name").val("");
-      //   $("#register-affiliate-address").val("");
-      //   $("#register-affiliate-pinata-api-key").val("");
-      //   $("#register-affiliate-pinata-api-secret").val("");
+        $("#reg-aff-name").val("");
+        $("#reg-aff-description").val("");
+        $("#reg-aff-payable-address").val("");
+        $("#reg-aff-judge-address").val("");
+        $("#reg-aff-pinata-api-key").val("");
+        $("#reg-aff-pinata-api-secret").val("");
 
-      //   await this.render();
-      // });
+        await this.render();
+      });
 
     } catch (e) {
       console.log(`DEBUG: dapp.registerAffiliateGym - error: ${JSON.stringify(e)}`);
     }
   },
 
-  generateQrCode: async function() {
+  deactivateAffiliateGym: async function(id) {
 
+    console.log(`DEBUG: dapp.deactivateAffiliateGym - ${id}`);
+
+    try {
+
+      await this.blockFitterContract.methods.unregisterAffiliateGym(parseInt(id)).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+        await this.render();
+      });
+      
+    } catch (e) {
+      console.log(`DEBUG: dapp.deactivateAffiliateGym - error: ${JSON.stringify(e)}`);
+    }
+  },
+
+  generateQrCode: async function() {
     const currentAddress = JSON.stringify(this.accounts[0]);
     console.log(`DEBUG: dapp.generateQrCode - Account address: ${currentAddress}`);
     qrcode.makeCode(currentAddress);
-    
-
-    // const name = $("#qrcode").val();
-    // var qrcode = new QRCode("test", {
-    //   text: "http://jindo.dev.naver.com/collie",
-    //   width: 128,
-    //   height: 128,
-    //   colorDark : "#000000",
-    //   colorLight : "#ffffff",
-    //   correctLevel : QRCode.CorrectLevel.H
-    // });
   },
 
   setAdmin: async function() {
