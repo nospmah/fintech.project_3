@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/nospmah/fintech.project_3#readme",
   "dependencies": {
+    "bootstrap-icons": "^1.4.1",
     "express": "^4.17.1",
     "qrcode-npm": "0.0.3"
   }

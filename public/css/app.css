@@ -6,7 +6,9 @@ body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-h5 {
+h2 {
+  font-size: 20px;
+  margin-top: 30px;
   margin-bottom: 20px;
 }
 
@@ -17,6 +19,7 @@ h5 {
 
 .tab-pane {
  min-height: 600px;
+ margin-right: 20px;
 }
 
 #app-container {
@@ -36,17 +39,19 @@ h5 {
 }
 
 #navigation {
-  margin:20px;
+  background-color: #0F0027;
   height: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 14px;
+  padding: 0px;
 }
 
 #owner {
-  margin-right: 20px;
   font-size: 14px;
+  color: white;
+  margin-right: 10px;
 }
 
 #affiliate-input {
@@ -69,12 +74,25 @@ h5 {
   color:black;
 }
 
-.registered-gym-header {
-  margin: 20px;
-  margin-top: 30px;
+.card-title {
+  font-size: 16px;
 }
 
-.content-container {
+.card-text {
+  font-size: 14px;
+}
+.card-link{
+  margin-top:10px;
+  margin-bottom:20px;
+  font-size: 14px;
+}
+
+.registered-gym-header {
+  margin: 20px;
+  margin-top: 75px;
+}
+
+.member-container {
   margin:20px;
 }
 
@@ -83,6 +101,25 @@ h5 {
   margin-bottom: 20px;
 }
 
+.nav-pills .nav-link {
+  background-color: black;
+  color: white;
+  border-radius: 0;
+}
+
 .nav-pills .nav-link.active {
-  background-color: #C80077;
+  background-color: white;
+  color: black;
+}
+
+.address-container {
+  padding-right: 35px;
+}
+
+.modal-dialog {
+  padding-top: 15%;
+}
+
+.modal-title {
+  font-size: 16px;
 }
