@@ -1,4 +1,4 @@
-const contractAddress = "0x304d58095e9b5578d51D4407fAb5D59Ba4fc6724";
+const contractAddress = "0x621fd0236A17145A140069A91269BFA693894bf3";
 const qrcode = new QRCode("qrcode");
 
 const dApp = {
@@ -118,8 +118,8 @@ const dApp = {
       const payable_address = $("#reg-aff-payable-address").val();
       const judge_address = $("#reg-aff-judge-address").val();
       // const pinata_api_key = $("#reg-aff-pinata-api-key").val();
-      // const pinata_secret_api_key = $("#reg-aff-pinata-api-secret").val();
-      
+      // const pinata_secret_api_key = $("#reg-aff-pinata-api-secret").val();      
+     
       // TODO - refactor to Netlify env vars
       const pinata_api_key = "a190d395a2bde42df710";
       const pinata_secret_api_key = "3a910879529b43f3b1cfd0162920c7ed0aa5693f9887995d8d81e815c8a93413";
@@ -154,20 +154,66 @@ const dApp = {
       const reference_hash = await json_upload_response.json();
       const reference_uri = `ipfs://${reference_hash.IpfsHash}`;
 
-      await this.blockFitterContract.methods.registerAffiliateGym(payable_address, reference_uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+      // There are two overloads of registerAffiliateGym based on optional param (affiliate judge address)
+      if (judge_address) {
+        await this.blockFitterContract.methods.registerAffiliateGym(payable_address, judge_address, reference_uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
         
-        $("#reg-aff-name").val("");
-        $("#reg-aff-description").val("");
-        $("#reg-aff-payable-address").val("");
-        $("#reg-aff-judge-address").val("");
-        // $("#reg-aff-pinata-api-key").val("");
-        // $("#reg-aff-pinata-api-secret").val("");
+          $("#reg-aff-name").val("");
+          $("#reg-aff-description").val("");
+          $("#reg-aff-payable-address").val("");
+          $("#reg-aff-judge-address").val("");
+          // $("#reg-aff-pinata-api-key").val("");
+          // $("#reg-aff-pinata-api-secret").val("");
+  
+          await this.render();
+        });
+      } else {
+        await this.blockFitterContract.methods.registerAffiliateGym(payable_address, reference_uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+        
+          $("#reg-aff-name").val("");
+          $("#reg-aff-description").val("");
+          $("#reg-aff-payable-address").val("");
+          $("#reg-aff-judge-address").val("");
+          // $("#reg-aff-pinata-api-key").val("");
+          // $("#reg-aff-pinata-api-secret").val("");
+  
+          await this.render();
+        });
+      }
+    } catch (e) {
+      console.log(`DEBUG: dapp.registerAffiliateGym - error: ${JSON.stringify(e)}`);
+    }
+  },
+
+  mineDailyWOD: async function() {
+
+    console.log(`DEBUG: registerAffiliateGym`);
+
+    try {
+
+      const user_address = $("#user-address").val();
+      const affiliate_address = $("#affiliate-address").val();
+
+      if (!user_address || !affiliate_address) {
+        alert('Missing data!');
+        return;
+      }
+
+      await this.blockFitterContract.methods.mineDailyWOD(user_address, affiliate_address).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+        
+        $("#user-address").val("");
+        $("#affiliate-address").val("");
 
         await this.render();
       });
 
     } catch (e) {
-      console.log(`DEBUG: dapp.registerAffiliateGym - error: ${JSON.stringify(e)}`);
+
+      console.log(JSON.stringify(e));
+      alert("You must be an affiliate judge to mine daily WODS!")
+      $("#user-address").val("");
+      $("#affiliate-address").val("");
+      await this.render();
     }
   },
 

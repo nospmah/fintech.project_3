@@ -5,6 +5,11 @@
 				"internalType": "contract FitToken",
 				"name": "_token",
 				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_registry_admin",
+				"type": "address"
 			}
 		],
 		"payable": false,
@@ -44,6 +49,37 @@
 	},
 	{
 		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "affiliate_judges",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "payable_address",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "ipfs_uri",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "is_active",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
 		"inputs": [],
 		"name": "getAffiliateGyms",
 		"outputs": [
@@ -55,6 +91,81 @@
 		],
 		"payable": false,
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getDailyWOD",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_user_address",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_affiliate_gym_address",
+				"type": "address"
+			}
+		],
+		"name": "mineDailyWOD",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_ipfs_uri",
+				"type": "string"
+			}
+		],
+		"name": "publishDailyWOD",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_address",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "_judge_address",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_ipfs_uri",
+				"type": "string"
+			}
+		],
+		"name": "registerAffiliateGym",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -78,18 +189,23 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "token_address",
-		"outputs": [
+		"constant": false,
+		"inputs": [
 			{
-				"internalType": "address",
-				"name": "",
+				"internalType": "address payable",
+				"name": "_address",
 				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_ipfs_uri",
+				"type": "string"
 			}
 		],
+		"name": "registerUser",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -105,6 +221,52 @@
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "unregisterUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "users",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "payable_address",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "ipfs_uri",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "is_active",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

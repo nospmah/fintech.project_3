@@ -126,9 +126,12 @@
       <div class="member-container">
         <h2>Validate Daily WOD</h2>
         <div class="mb-3">              
-          <input type="text" class="form-control" id="judge-user-address" aria-describedby="emailHelp" placeholder="BlockFitter address">
+          <input type="text" class="form-control" id="user-address" aria-describedby="emailHelp" placeholder="BlockFitter address">
         </div>
-        <button class="btn btn-primary">Mine daily WOD</button>
+        <div class="mb-3">              
+          <input type="text" class="form-control" id="affiliate-address" aria-describedby="emailHelp" placeholder="Affiliate gym address">
+        </div>
+        <button class="btn btn-primary" onclick="dApp.mineDailyWOD()">Mine daily WOD</button>
       </div>
     </div>
 
