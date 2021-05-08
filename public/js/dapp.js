@@ -1,13 +1,13 @@
-const contractAddress = "0x1918b645ECC3aa5aE40a80994063Ef5F5B32e04F";
+const contractAddress = "0x304d58095e9b5578d51D4407fAb5D59Ba4fc6724";
 const qrcode = new QRCode("qrcode");
 
 const dApp = {
 
   ethEnabled: function() {
-    // If the browser has an Ethereum provider (MetaMask) installed
 
-    console.log(`DEBUG: window.ethereum: ${window.ethereum}, qrcode: ${QRCode}`);
+    console.log(`DEBUG: window.ethereum: ${window.ethereum}`);
 
+    // Does browser have an Ethereum provider (MetaMask) installed
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       window.ethereum.enable();
@@ -23,47 +23,51 @@ const dApp = {
     
     this.generateQrCode();
 
-    this.affiliateGymCount = await this.blockFitterContract.methods.getAffiliateGymCount().call();
+    // List of Affiliate gym addresses
+    this.affiliateGymsAddresses = [];
+
+    // List of Gym structs (includes uri)
     this.affiliateGyms = [];
 
-    console.log(`DEBUG: dapp.initData - gym count: ${this.affiliateGymCount}`);
+    try {
 
-    for (let i = 1; i <= this.affiliateGymCount; i++) {
-      try {
+      // Get list of all gyms
+      this.affiliateGymsAddresses = await this.blockFitterContract.methods.getAffiliateGyms().call();
+
+      // Log
+      console.log(`DEBUG: dapp.initData - affiliate gym count: ${this.affiliateGymsAddresses.length}`);
+
+      // Make call for each address, need uri
+      for (let i = 0; i < this.affiliateGymsAddresses.length; i++) {
+
+        let { name, description } = "";
+
+        // Make call to view function
+        const gym = await this.blockFitterContract.methods.affiliate_gyms(this.affiliateGymsAddresses[i]).call();
         
         // Get IPFS uri
-        const affiliate_gym_uri = await this.blockFitterContract.methods.getAffiliateUri(i).call();
-        
-        // If gym has been deactivated, uri will be empty
-        if (affiliate_gym_uri === '') continue;
+        const uri = gym["ipfs_uri"];
 
-        // let { name, description } = null;
-        let name = "";
-        let description = "";
-
-        if (affiliate_gym_uri.startsWith('ipfs')) {
-          const affiliate_gym_json = await fetchMetadata(affiliate_gym_uri);
+        // Get off-chain data
+        if (uri.startsWith('ipfs')) {
+          const affiliate_gym_json = await fetchMetadata(uri);
           name = affiliate_gym_json['name'];
           description = affiliate_gym_json['description'];
-        }         
-
-        console.log(`DEBUG: dapp.initData - gymId: ${i}, uri: ${affiliate_gym_uri}`);
-        //console.log(`DEBUG: dapp.initData - gymId: ${i} ', affiliate_gym_uri)
-        //const affiliate_gym_json = await fetchMetadata(affiliate_gym_uri);
-        //console.log('affiliate_gym_json: ', token_json)
-
+        }   
+        
+        // Update UI binding collection
         this.affiliateGyms.push({
-          id: i,
           name: name,
           description: description,
-          uri: affiliate_gym_uri
+          uri: uri,
+          address: String(this.affiliateGymsAddresses[i])
         });
-
-      } catch (e) {
-        console.log(`DEBUG: dapp.initData - error: ${JSON.stringify(e)}`);
       }
-    }
+    } catch (e) {
+      console.log(`DEBUG: dapp.registerAffiliateGym - error: ${JSON.stringify(e)}`);
+    } 
   },
+  
 
   render: async function() {    
     
@@ -81,7 +85,7 @@ const dApp = {
     $("#affiliate-gym-container").html("");
 
     // Render cards for each affiliate gym
-    this.affiliateGyms.forEach((gym) => {
+    this.affiliateGyms.forEach((gym) => {      
       
       const hash = gym.uri.replace("ipfs://","");
       const uri = `https://ipfs.io/ipfs/${hash}`;
@@ -92,10 +96,10 @@ const dApp = {
           <img src="../images/box_2.png" class="card-img-top" alt="...">
           <div class="card-body">
             <h3 class="card-title">${gym.name}</h3>
-            <p class="card-text">Id: ${gym.id}</p>
             <p class="card-text">${gym.description}</p>
+            <p class="card-text">${gym.address}</p>
             <p class="card-link"><a href="${uri}" target="_blank">Details</a></p>
-            <p><a href="#" class="btn btn-primary" data-id="${gym.id}" onclick="dApp.deactivateAffiliateGym(${gym.id})">Deactivate</a></p>
+            <p><a href="#" class="btn btn-primary" onclick="dApp.deactivateAffiliateGym('${gym.address}')">Deactivate</a></p>
           </div>
         </div>
         `
@@ -116,7 +120,7 @@ const dApp = {
       // const pinata_api_key = $("#reg-aff-pinata-api-key").val();
       // const pinata_secret_api_key = $("#reg-aff-pinata-api-secret").val();
       
-      // TODO - remove
+      // TODO - refactor to Netlify env vars
       const pinata_api_key = "a190d395a2bde42df710";
       const pinata_secret_api_key = "3a910879529b43f3b1cfd0162920c7ed0aa5693f9887995d8d81e815c8a93413";
 
@@ -150,14 +154,14 @@ const dApp = {
       const reference_hash = await json_upload_response.json();
       const reference_uri = `ipfs://${reference_hash.IpfsHash}`;
 
-      await this.blockFitterContract.methods.registerAffiliateGym(name, payable_address, reference_uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+      await this.blockFitterContract.methods.registerAffiliateGym(payable_address, reference_uri).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
         
         $("#reg-aff-name").val("");
         $("#reg-aff-description").val("");
         $("#reg-aff-payable-address").val("");
         $("#reg-aff-judge-address").val("");
-        $("#reg-aff-pinata-api-key").val("");
-        $("#reg-aff-pinata-api-secret").val("");
+        // $("#reg-aff-pinata-api-key").val("");
+        // $("#reg-aff-pinata-api-secret").val("");
 
         await this.render();
       });
@@ -167,13 +171,13 @@ const dApp = {
     }
   },
 
-  deactivateAffiliateGym: async function(id) {
+  deactivateAffiliateGym: async function(address) {
 
-    console.log(`DEBUG: dapp.deactivateAffiliateGym - ${id}`);
+    console.log(`DEBUG: dapp.deactivateAffiliateGym - ${address}`);
 
     try {
 
-      await this.blockFitterContract.methods.unregisterAffiliateGym(parseInt(id)).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
+      await this.blockFitterContract.methods.unregisterAffiliateGym(address).send({from: this.accounts[0]}).on("receipt", async (receipt) => {
         await this.render();
       });
 
@@ -228,3 +232,53 @@ const dApp = {
 };
 
 dApp.main();
+
+
+
+  // initData: async function() {
+
+  //   const fetchMetadata = (reference_uri) => fetch(`https://gateway.pinata.cloud/ipfs/${reference_uri.replace("ipfs://", "")}`, { mode: "cors" }).then((resp) => resp.json());
+    
+  //   this.generateQrCode();
+
+  //   this.affiliateGymCount = await this.blockFitterContract.methods.getAffiliateGymCount().call();
+  //   this.affiliateGyms = [];
+
+  //   console.log(`DEBUG: dapp.initData - gym count: ${this.affiliateGymCount}`);
+
+  //   for (let i = 1; i <= this.affiliateGymCount; i++) {
+  //     try {
+        
+  //       // Get IPFS uri
+  //       const affiliate_gym_uri = await this.blockFitterContract.methods.getAffiliateUri(i).call();
+        
+  //       // If gym has been deactivated, uri will be empty
+  //       if (affiliate_gym_uri === '') continue;
+
+  //       // let { name, description } = null;
+  //       let name = "";
+  //       let description = "";
+
+  //       if (affiliate_gym_uri.startsWith('ipfs')) {
+  //         const affiliate_gym_json = await fetchMetadata(affiliate_gym_uri);
+  //         name = affiliate_gym_json['name'];
+  //         description = affiliate_gym_json['description'];
+  //       }         
+
+  //       console.log(`DEBUG: dapp.initData - gymId: ${i}, uri: ${affiliate_gym_uri}`);
+  //       //console.log(`DEBUG: dapp.initData - gymId: ${i} ', affiliate_gym_uri)
+  //       //const affiliate_gym_json = await fetchMetadata(affiliate_gym_uri);
+  //       //console.log('affiliate_gym_json: ', token_json)
+
+  //       this.affiliateGyms.push({
+  //         id: i,
+  //         name: name,
+  //         description: description,
+  //         uri: affiliate_gym_uri
+  //       });
+
+  //     } catch (e) {
+  //       console.log(`DEBUG: dapp.initData - error: ${JSON.stringify(e)}`);
+  //     }
+  //   }
+  // },

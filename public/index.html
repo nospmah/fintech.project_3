@@ -25,28 +25,29 @@
   <title>BlockFitter</title>
 </head>
 
-<!-- class="grey lighten-3" -->
 <body>
 
+<!-- App Root -->
 <div id="app-container" class="container-fluid">
   
+  <!-- Header -->
   <div id="header"></div>
   
+  <!-- Navigation -->
   <div id="navigation">
     <ul class="nav nav-pills" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link " id="affiliate-tab" data-bs-toggle="tab" data-bs-target="#affiliate" type="button" role="tab" aria-controls="profile" aria-selected="false">Affiliate Gym</button>
+        <button class="nav-link active" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="home" aria-selected="true">Members</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="home" aria-selected="true">Member</button>
+        <button class="nav-link " id="affiliate-tab" data-bs-toggle="tab" data-bs-target="#affiliate" type="button" role="tab" aria-controls="profile" aria-selected="false">Affiliate Gyms</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="contact" aria-selected="false">Admin</button>
+        <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab" aria-controls="contact" aria-selected="false">Affiliate Judges</button>
       </li>
     </ul>
     <div class="address-container">
-      <span id="owner"></span>
-      
+      <span id="owner"></span>      
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="border-radius: 0;">
         <span class="fa fa-qrcode" style="color: white; cursor: pointer;"></span>
       </button>
@@ -57,7 +58,7 @@
     </div>      
   </div>
 
-
+  <!-- Tab Content -->
   <div class="tab-content" id="myTabContent">
     
     <!-- Members -->
@@ -65,22 +66,24 @@
       <div class="member-container">
         <h2>Daily WOD</h2>
 
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/mnqNlA_c9-4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        Name: Fran
-        
-        For time:
-
-          21 Thrusters
-          21 Pull-ups
-          15 Thrusters
-          15 Pull-ups
-          9 Thrusters
-          9 Pull-ups
-
-        <!-- <button class="btn btn-primary" onclick="dApp.generateQrCode()">My address</button> -->
-        
-
-
+        <div class="row wod-grid">
+          <div class="col-sm-4" style="">
+            <p>Name: Fran</p>
+            <p>For time:</p>
+            <ul>
+              <li>21 Thrusters</li>
+              <li>21 Pull-ups</li>
+              <li>15 Thrusters</li>
+              <li>15 Pull-ups</li>
+              <li>9 Thrusters</li>
+              <li>9 Pull-ups</li>
+            </ul>
+            <button class="btn btn-primary">Submit daily WOD</button>
+          </div>
+          <div class="col-sm-6">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/mnqNlA_c9-4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -106,21 +109,27 @@
         <div class="mb-3">              
           <input type="text" class="form-control" id="reg-aff-judge-address" placeholder="Affiliate judge address (optional)">
         </div>
-        <div class="mb-3">              
+        <!-- <div class="mb-3">              
           <input type="text" class="form-control" id="reg-aff-pinata-api-key" placeholder="Pinata API key">
         </div>
         <div class="mb-3">              
           <input type="password" class="form-control" id="reg-aff-pinata-api-secret" placeholder="Pinata secret">
-        </div>
+        </div> -->
         <button type="submit" class="btn btn-primary float-right" onclick="dApp.registerAffiliateGym()">Register</button>
       </div>       
       <h2 class="registered-gym-header">Registered affiliate gyms</h2>
       <div id="affiliate-gym-container"></div>
     </div>
 
-    <!-- Administrators -->
+    <!-- Affiliate Judge -->
     <div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
-      hello, admin
+      <div class="member-container">
+        <h2>Validate Daily WOD</h2>
+        <div class="mb-3">              
+          <input type="text" class="form-control" id="judge-user-address" aria-describedby="emailHelp" placeholder="BlockFitter address">
+        </div>
+        <button class="btn btn-primary">Mine daily WOD</button>
+      </div>
     </div>
 
   </div>  
