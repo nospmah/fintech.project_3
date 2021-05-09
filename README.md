@@ -15,17 +15,16 @@
 
 What happens when you take "proof of work" literally? What if we incentivize group fitness through block-chain technology?
 
-This project aims to build a competitive architecture on the block-chain around physical activity, incentivizing participants to compete for glory on daily leaderboards while mining FIT tokens (fungible) for their effort.
+This project aims to build a competitive architecture on the block-chain around physical activity, incentivizing participants to compete for glory on daily leaderboards while mining fungible FIT tokens for their effort.
 
 A proof-of-concept dApp will be developed to expore and test this idea.
 
 <br>
 
 ### Objectives
-* Define proposal ERC specification including contract interface definitions
-* Build and deploy ERC20 complient contracts to Ropsten test network
+* Build and deploy ERC20 complient Solidity contracts
 * Build and deploy proof-of-concept, web-based dApp that integrates with Solidity contracts
-* Users will mine FIT tokens (fungible) and post scores to leaderboards
+* Users will mine fungible FIT tokens 
 * Identify future concepts/ideas to expore further
 
 ### Out of Scope
@@ -81,9 +80,22 @@ A proof-of-concept dApp will be developed to expore and test this idea.
 
 <br>
 
-* [todo](todo.sol)
+### Presentation
+https://docs.google.com/presentation/d/1-Bp7ZK-5B1wa9uL_KcA4kW1GTP-6BBdpccdlU9ubyuo/edit?usp=sharing
 
+<br>
 
+### Solidity Contracts
+* [FitToken.sol](./sol/FitToken.sol)
+* [BlockFitterRegistry_v2.sol](./sol/BlockFitterRegistry_v2.sol)
+* [BlockFitterDeployer_v2.sol](./sol/BlockFitterDeployer_v2.sol)
+
+<br>
+
+### dApp
+* [Static site web root](./public/)
+* [dApp Javascript](./public/js/dapp.js)
+* [dApp HTML](./public/index.html)
 <br>
 
 - - -
