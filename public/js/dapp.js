@@ -1,32 +1,53 @@
 const contractAddress = "0x621fd0236A17145A140069A91269BFA693894bf3";
+const tokenAddress = "0x05740cC6A6c1235b5C6d076B4e2e7B685B052aD0";
 const qrcode = new QRCode("qrcode");
 
 const dApp = {
 
-  ethEnabled: function() {
+  main: async function() {
 
-    console.log(`DEBUG: window.ethereum: ${window.ethereum}`);
+    console.log(`DEBUG: dapp.main`);
 
-    // Does browser have an Ethereum provider (MetaMask) installed
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      window.ethereum.enable();
-      return true;
+    // Notify user if MetaMask not installed
+    if (!this.ethEnabled()) {
+      alert("Please install MetaMask to use this dApp!");
     }
 
-    return false;
+    try {
+
+      // Get Eth accounts
+      this.accounts = await window.web3.eth.getAccounts();
+      this.contractAddress = contractAddress; 
+
+      // Load ABI json
+      this.blockFitterRegistryJson = await (await fetch("../assets/BlockFitterRegistry.json")).json();
+      
+      // Init contract
+      this.blockFitterContract = new window.web3.eth.Contract(
+        this.blockFitterRegistryJson,
+        this.contractAddress,
+        { defaultAccount: this.accounts[0] });
+
+      // Log
+      console.log(`DEBUG: dapp.main - contract: ${this.blockFitterContract}`);
+
+      // Render UI
+      await this.render();
+
+    } catch (e) {
+      console.log(JSON.stringify(e));
+    }
   },
 
   initData: async function() {
 
+    // Helper function, fetch IPFS json
     const fetchMetadata = (reference_uri) => fetch(`https://gateway.pinata.cloud/ipfs/${reference_uri.replace("ipfs://", "")}`, { mode: "cors" }).then((resp) => resp.json());
-    
-    this.generateQrCode();
 
     // List of Affiliate gym addresses
     this.affiliateGymsAddresses = [];
 
-    // List of Gym structs (includes uri)
+    // List of affiliate gyms
     this.affiliateGyms = [];
 
     try {
@@ -81,8 +102,7 @@ const dApp = {
 
     // Get account address display string
     const owner_address = JSON.stringify(this.accounts[0]).replace(/["']/g, "");
-    $("#owner").text(`${owner_address}`);
-    $("#qr-code-modal-title").text(`${owner_address}`);    
+    $("#owner").text(`${owner_address}`);      
 
     // Update daily wod uri
     let wod_uri = `https://ipfs.io/ipfs/${this.dailyWodUri.replace("ipfs://","")}`;
@@ -99,14 +119,22 @@ const dApp = {
       
       $("#affiliate-gym-container").append(
         `
-        <div class="card w-25">
+        <div class="aff-gym-card card w-25">
           <img src="../images/box_2.png" class="card-img-top" alt="...">
           <div class="card-body">
-            <h3 class="card-title">${gym.name}</h3>
+            <div class="header">
+              <p class="card-title">${gym.name}</p>
+              <span class="fa fa-gavel float-end" style="color: black; cursor: pointer; margin-top:3px;"></span>
+            </div>            
             <p class="card-text">${gym.description}</p>
             <p class="card-text">${gym.address}</p>
             <p class="card-link"><a href="${uri}" target="_blank">Details</a></p>
-            <p><a href="#" class="btn btn-primary" onclick="dApp.deactivateAffiliateGym('${gym.address}')">Deactivate</a></p>
+            <p>
+              <button class="btn btn-primary" onclick="dApp.deactivateAffiliateGym('${gym.address}')">Deactivate</button>
+              <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="dApp.generateQrCode('${gym.address}')">
+                <span class="fa fa-qrcode" style="color: white; cursor: pointer;"></span>
+              </button>
+            </p>            
           </div>
         </div>
         `
@@ -242,11 +270,13 @@ const dApp = {
   generateQrCode: async function(address) {
     
     let addr = address;
-    if (!addr) addr = JSON.stringify(this.accounts[0]);
+    if (!addr) addr = JSON.stringify(this.accounts[0]).replaceAll('"','');
 
     console.log(`DEBUG: dapp.generateQrCode - Address: ${addr}`);
     
     qrcode.makeCode(addr);
+
+    $("#qr-code-modal-title").text(`${addr}`);  
   },
 
   setAdmin: async function() {
@@ -258,40 +288,43 @@ const dApp = {
     // }
   },
 
-  main: async function() {
+  ethEnabled: function() {
 
-    // Initialize web3
-    if (!this.ethEnabled()) {
-      alert("Please install MetaMask to use this dApp!");
+    console.log(`DEBUG: window.ethereum: ${window.ethereum}`);
+
+    // Does browser have an Ethereum provider (MetaMask) installed
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      window.ethereum.enable();
+      return true;
     }
 
-    try {
-
-      this.accounts = await window.web3.eth.getAccounts();
-      this.contractAddress = contractAddress; 
-
-      this.blockFitterRegistryJson = await (await fetch("../assets/BlockFitterRegistry.json")).json();
-
-      this.blockFitterContract = new window.web3.eth.Contract(
-        this.blockFitterRegistryJson,
-        this.contractAddress,
-        { defaultAccount: this.accounts[0] }
-      );
-
-      console.log(`DEBUG: dapp.main - contract: ${this.blockFitterContract}`);
-
-      await this.render();
-
-    } catch (e) {
-      console.log(JSON.stringify(e));
-    }
+    return false;
   }
+
 };
 
 dApp.main();
 
 
+      // try {
+        
+      //   this.tokenJson = await (await fetch("../assets/FitToken.json")).json();
 
+      //   this.tokenContract = new window.web3.eth.Contract(
+      //     this.tokenJson,
+      //     this.tokenAddress);
+
+      //   //this.tokenContract.options.address = this.tokenAddress;
+      //   // this.tokenContract.options.address = this.tokenAddress;
+      //   //let balance = await this.tokenContract.methods.balanceOf('0x88964f23206Fd74EB4F60B9d1b6FE2eFaAF48B24').call();
+
+      //   console.log(`DEBUG - FIT token contract: ${JSON.stringify(this.tokenContract.options)}`);
+
+
+      // } catch (e) {
+      //   console.log(`Token testing - error: ${e}`);
+      // }
   // initData: async function() {
 
   //   const fetchMetadata = (reference_uri) => fetch(`https://gateway.pinata.cloud/ipfs/${reference_uri.replace("ipfs://", "")}`, { mode: "cors" }).then((resp) => resp.json());

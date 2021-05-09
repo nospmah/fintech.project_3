@@ -77,15 +77,20 @@ h2 {
   margin-bottom:20px;
   color:black;
 }
-
-.card-title {
+.aff-gym-card .header {
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+.aff-gym-card .card-title {
   font-size: 16px;
+  font-weight: 600;
 }
 
-.card-text {
+.aff-gym-card .card-text {
   font-size: 14px;
 }
-.card-link{
+.aff-gym-card .card-link{
   margin-top:10px;
   margin-bottom:20px;
   font-size: 14px;
