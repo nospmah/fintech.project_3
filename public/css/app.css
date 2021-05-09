@@ -6,6 +6,10 @@ body {
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+a {
+  color: #C80077;
+}
+
 h2 {
   font-size: 20px;
   margin-top: 30px;
@@ -126,4 +130,21 @@ h2 {
 
 .wod-grid {
   background-color: white;
+}
+
+.wod-flex-cont {
+ display: flex;
+ width: 100%;
+ justify-content: space-between;
+}
+
+.wod-flex-cell {
+  margin-right: 50px;
+}
+
+.wod-flex-cell .card-title {
+  font-weight: 600;
+}
+
+.wod-flex-cell .card-text {
 }

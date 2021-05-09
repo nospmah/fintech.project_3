@@ -63,11 +63,14 @@ const dApp = {
           address: String(this.affiliateGymsAddresses[i])
         });
       }
+
+      // Get daily WOD
+      this.dailyWodUri = await this.blockFitterContract.methods.getDailyWOD().call();
+
     } catch (e) {
       console.log(`DEBUG: dapp.registerAffiliateGym - error: ${JSON.stringify(e)}`);
     } 
-  },
-  
+  },  
 
   render: async function() {    
     
@@ -80,6 +83,10 @@ const dApp = {
     const owner_address = JSON.stringify(this.accounts[0]).replace(/["']/g, "");
     $("#owner").text(`${owner_address}`);
     $("#qr-code-modal-title").text(`${owner_address}`);    
+
+    // Update daily wod uri
+    let wod_uri = `https://ipfs.io/ipfs/${this.dailyWodUri.replace("ipfs://","")}`;
+    $("#wod-details").attr("href", `${wod_uri}`);
 
     // Clear affiliate gyms
     $("#affiliate-gym-container").html("");
@@ -232,10 +239,14 @@ const dApp = {
     }
   },
 
-  generateQrCode: async function() {
-    const currentAddress = JSON.stringify(this.accounts[0]);
-    console.log(`DEBUG: dapp.generateQrCode - Account address: ${currentAddress}`);
-    qrcode.makeCode(currentAddress);
+  generateQrCode: async function(address) {
+    
+    let addr = address;
+    if (!addr) addr = JSON.stringify(this.accounts[0]);
+
+    console.log(`DEBUG: dapp.generateQrCode - Address: ${addr}`);
+    
+    qrcode.makeCode(addr);
   },
 
   setAdmin: async function() {

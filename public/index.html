@@ -48,13 +48,9 @@
     </ul>
     <div class="address-container">
       <span id="owner"></span>      
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="border-radius: 0;">
+      <button type="button" onclick="dApp.generateQrCode()" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="border-radius: 0;">
         <span class="fa fa-qrcode" style="color: white; cursor: pointer;"></span>
       </button>
-      <!-- <a  class="" data-toggle="modal" data-target="#exampleModal">
-        <span class="fa fa-qrcode" style="color: white; cursor: pointer;"></span>
-      </a> -->
-
     </div>      
   </div>
 
@@ -65,22 +61,20 @@
     <div class="tab-pane fade show active" id="member" role="tabpanel" aria-labelledby="member-tab">
       <div class="member-container">
         <h2>Daily WOD</h2>
-
-        <div class="row wod-grid">
-          <div class="col-sm-4" style="">
-            <p>Name: Fran</p>
-            <p>For time:</p>
-            <ul>
-              <li>21 Thrusters</li>
-              <li>21 Pull-ups</li>
-              <li>15 Thrusters</li>
-              <li>15 Pull-ups</li>
-              <li>9 Thrusters</li>
-              <li>9 Pull-ups</li>
-            </ul>
-            <button class="btn btn-primary">Submit daily WOD</button>
+        <div class="wod-flex-cont">
+          <div class="wod-flex-cell" style="min-width:300px; margin-left: 20px;">
+            <p class="card-title">Fran</p>
+            <p class="card-text">21-15-9 Reps For Time</p>
+            <p class="card-text">Thrusters (95/65 lb)</p>
+            <p class="card-text">Pull-Ups</p>
+            <p class="card-title">How do you perform the "Fran" workout?</p>
+            <p class="card-text">Perform the 21 Thrusters and 21 Pull-Ups, then 15 Thrusters and 15 Pull-Ups, then 9 Thrusters and 9 Pull-Ups, as fast as possible.</p>
+            <p class="card-title">How do you scale the "Fran" workout?</p>
+            <p class="card-text">This WOD is meant to feel light, fast, and evoke pain—the good kind of pain. Both the thrusters and pull-ups should be done in large or unbroken sets. Scale the movements so you can go FAST—sets of two and three repetitions won't get your lungs/legs/arms burning in the way they were intended to burn for this WOD.</p>
+            <p class="card-link"><a id="wod-details" href="#" target="_blank">Details</a></p> 
+            <button class="btn btn-primary" style="width:auto" data-toggle="modal" data-target="#exampleModal" onclick="dApp.generateQrCode()">Submit daily WOD</button>
           </div>
-          <div class="col-sm-6">
+          <div class="wod-flex-cell">
             <iframe width="560" height="315" src="https://www.youtube.com/embed/mnqNlA_c9-4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
         </div>
