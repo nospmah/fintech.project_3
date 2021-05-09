@@ -127,7 +127,7 @@ const dApp = {
               <span class="fa fa-gavel float-end" style="color: black; cursor: pointer; margin-top:3px;"></span>
             </div>            
             <p class="card-text">${gym.description}</p>
-            <p class="card-text">${gym.address}</p>
+            <!--<p class="card-text">${gym.address}</p>-->
             <p class="card-link"><a href="${uri}" target="_blank">Details</a></p>
             <p>
               <button class="btn btn-primary" onclick="dApp.deactivateAffiliateGym('${gym.address}')">Deactivate</button>
