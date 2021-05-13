@@ -152,15 +152,11 @@ const dApp = {
       const description = $("#reg-aff-description").val();
       const payable_address = $("#reg-aff-payable-address").val();
       const judge_address = $("#reg-aff-judge-address").val();
-      // const pinata_api_key = $("#reg-aff-pinata-api-key").val();
-      // const pinata_secret_api_key = $("#reg-aff-pinata-api-secret").val();      
-     
-      // TODO - refactor to Netlify env vars
-      const pinata_api_key = "a190d395a2bde42df710";
-      const pinata_secret_api_key = "3a910879529b43f3b1cfd0162920c7ed0aa5693f9887995d8d81e815c8a93413";
+      const pinata_api_key = $("#reg-aff-pinata-api-key").val();
+      const pinata_secret_api_key = $("#reg-aff-pinata-api-secret").val(); 
 
       // Required data
-      if (!name || !payable_address) {
+      if (!name || !payable_address || !pinata_api_key || !pinata_secret_api_key) {
         alert('Missing data!');
         return;
       }
@@ -197,8 +193,8 @@ const dApp = {
           $("#reg-aff-description").val("");
           $("#reg-aff-payable-address").val("");
           $("#reg-aff-judge-address").val("");
-          // $("#reg-aff-pinata-api-key").val("");
-          // $("#reg-aff-pinata-api-secret").val("");
+          $("#reg-aff-pinata-api-key").val("");
+          $("#reg-aff-pinata-api-secret").val("");
   
           await this.render();
         });
@@ -209,8 +205,8 @@ const dApp = {
           $("#reg-aff-description").val("");
           $("#reg-aff-payable-address").val("");
           $("#reg-aff-judge-address").val("");
-          // $("#reg-aff-pinata-api-key").val("");
-          // $("#reg-aff-pinata-api-secret").val("");
+          $("#reg-aff-pinata-api-key").val("");
+          $("#reg-aff-pinata-api-secret").val("");
   
           await this.render();
         });
